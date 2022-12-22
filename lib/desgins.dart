@@ -1,28 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class CTextField extends StatelessWidget {
-  const CTextField({super.key, this.hinttext,this.hidden});
+class CTextField extends ConsumerWidget {
+  CTextField(
+      {super.key,
+      this.hinttext,
+      this.hidden,
+      this.icon,
+      required this.onChanged,
+      this.controller,
+      required this.validator});
   final String? hinttext;
+  final String? Function(String?) validator;
+  final Function(String?) onChanged;
+
+  final controller;
   final bool? hidden;
+  final icon;
+  late final eye = StateProvider<bool?>((ref) => hidden);
+
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: SizedBox(
-        height: 48,
-        width: 312,
+  Widget build(BuildContext context, ref) {
+    return SizedBox(
+      height: 82,
+      width: 312,
+      child: Center(
         child: TextFormField(
+        onChanged: (value) {
+          
+        },
           maxLength: 50,
-          obscureText: hidden??false,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // validator: validator,
+          obscureText: ref.watch(eye) ?? false,
           maxLines: 1,
+          validator: validator,
           decoration: InputDecoration(
+            prefixIcon: icon,
+            suffixIcon: (hinttext == 'Password')
+                ? IconButton(
+                    onPressed: () {
+                      ref.read(eye.notifier).state =
+                          !(ref.read(eye.notifier).state ?? true);
+                    },
+                    icon: Icon(
+                      (!(ref.watch(eye) ?? false))
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.white,
+                    ),
+                  )
+                : null,
+            contentPadding: const EdgeInsets.all(10),
             counterText: '',
-            
-            filled: true,
             hintText: hinttext,
-            fillColor: Colors.grey,
-            enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
+            enabledBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
             border: const OutlineInputBorder(),
           ),
         ),
@@ -47,3 +81,21 @@ const MaterialColor mainColor = MaterialColor(
   },
 );
 const int _bluePrimaryValue = 0xFF92E3A9;
+
+class CText extends StatelessWidget {
+  const CText({
+    super.key,
+    this.size,
+    required this.t,
+  });
+  final size;
+  final String t;
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      t,
+      style: GoogleFonts.poppins(
+          textStyle: TextStyle(fontSize: size, fontWeight: FontWeight.w500)),
+    );
+  }
+}

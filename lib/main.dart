@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:musicoo/AuthViews/AuthView.dart';
+import 'package:musicoo/AuthViews/Login.dart';
 import 'package:musicoo/AuthViews/Register.dart';
 import 'package:musicoo/InitialPages/Splash.dart';
 import 'package:musicoo/desgins.dart';
@@ -9,17 +12,42 @@ void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      routes: [
+        GoRoute(
+          path: 'Auth',
+          routes: [
+            GoRoute(
+              path: 'login',
+              builder: (context, state) => LoginView(),
+            ),
+            GoRoute(
+              path: 'register',
+              builder: (context, state) => RegisterView(),
+            ),
+          ],
+          builder: (context, state) => AuthView(),
+        ),
+      ],
+      builder: (context, state) => MyHomePage(),
+    ),
+  ],
+);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Musicoo',
       theme: ThemeData.dark().copyWith(
         colorScheme: const ColorScheme.light().copyWith(primary: mainColor),
       ),
-      home: const MyHomePage(),
+      routerConfig: _router,
     );
   }
 }
@@ -33,7 +61,9 @@ class MyHomePage extends ConsumerWidget {
     return token.when(data: (data) {
       return const SplashScreen();
     }, error: ((error, stackTrace) {
-      return const SplashScreen();
+      // context.go('/Auth');
+      return const AuthView();
+      // return null;
     }), loading: () {
       return const SplashScreen();
     });
