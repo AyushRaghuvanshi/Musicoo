@@ -17,21 +17,7 @@ class LoginView extends ConsumerWidget {
   late TextEditingController emailec;
   late TextEditingController pass;
 
-  validate_email(String emails, ref) {
-    log(emails);
-  }
-
   bool emailok = true;
-  submitSearch(ref) {
-    log('here');
-    if (debounce?.isActive ?? false) {
-      debounce?.cancel();
-    }
-
-    debounce = Timer(Duration(seconds: 1), () {
-      validate_email(emailec.text, ref);
-    });
-  }
 
   void init(ref) {
     emailec = TextEditingController();
@@ -41,6 +27,13 @@ class LoginView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    ref.listen(login, (previous, next) {
+      log(previous?.value.toString() ?? "");
+      log(next.value.toString());
+      if (next.value == "Success") {
+        context.go('/home');
+      }
+    });
     // log('here');
     init(ref);
     return Scaffold(
@@ -102,7 +95,8 @@ class LoginView extends ConsumerWidget {
                         child: CTextField(
                           controller: emailec,
                           onChanged: (v) {
-                            submitSearch(ref);
+                            // submitSearch(ref);
+                            emails = v ?? "";
                           },
                           validator: (value) {
                             bool emailerror = RegExp(
@@ -127,7 +121,10 @@ class LoginView extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: CTextField(
-                          onChanged: ((p0) {}),
+                          onChanged: ((v) {
+                            log(v!);
+                            passwords = v;
+                          }),
                           controller: pass,
                           validator: (value) {
                             bool passValid = RegExp(
@@ -157,7 +154,9 @@ class LoginView extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.go('/Auth/login/forgot');
+                                },
                                 child: Text(
                                   'Forgot Password?',
                                   style: GoogleFonts.montserrat(
@@ -167,36 +166,32 @@ class LoginView extends ConsumerWidget {
                         )),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 24.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              log(passok.toString());
-                              if (!emailok) {
-                                return;
-                              }
-                              if (!passok) {
-                                return;
-                              }
-                              log(emailec.text.trim().toLowerCase() +
-                                  " " +
-                                  pass.text);
-                              ref.watch(email.notifier).state =
-                                  emailec.text.trim().toLowerCase();
-                              ref.watch(password.notifier).state = pass.text;
-                              ref.refresh(login);
-                            },
-                            child: SizedBox(
-                              height: 48,
-                              width: 280,
-                              child: Center(
-                                  child: Text(
-                                'Login',
-                                style: GoogleFonts.montserrat(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600),
-                              )),
-                            )),
-                      ),
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                log(passok.toString());
+                                if (!emailok) {
+                                  return;
+                                }
+                                if (!passok) {
+                                  return;
+                                }
+                                ref.watch(email.notifier).state =
+                                    emails.trim().toLowerCase();
+                                ref.watch(password.notifier).state = passwords;
+                                final loginstate = ref.refresh(login);
+                              },
+                              child: SizedBox(
+                                height: 48,
+                                width: 280,
+                                child: Center(
+                                    child: Text(
+                                  'Login',
+                                  style: GoogleFonts.montserrat(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                )),
+                              ))),
                       Container(
                         child: Center(
                           child: Row(
@@ -208,7 +203,9 @@ class LoginView extends ConsumerWidget {
                                     fontSize: 14, fontWeight: FontWeight.w400),
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.go('/Auth/register');
+                                },
                                 child: Text(
                                   'Sign up',
                                   style: GoogleFonts.montserrat(

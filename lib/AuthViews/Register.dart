@@ -5,34 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:musicoo/MainViews/dashboard.dart';
 import 'package:musicoo/desgins.dart';
 import 'package:musicoo/providers.dart';
 
 class RegisterView extends ConsumerWidget {
+  bool passsame = false;
+
   RegisterView({super.key});
   String emails = "";
   String passwords = "";
+  String firsts = "";
+  String lasts = "";
   bool passok = true;
-  Timer? debounce;
-  late TextEditingController emailec;
-  late TextEditingController pass;
-  late TextEditingController first;
-  late TextEditingController last;
 
   bool emailok = true;
 
-  void init(ref) {
-    emailec = TextEditingController();
-    pass = TextEditingController();
-    first = TextEditingController();
-    last = TextEditingController();
-    // log('here');
-  }
-
   @override
   Widget build(BuildContext context, ref) {
-    log('here');
-    init(ref);
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -97,9 +87,9 @@ class RegisterView extends ConsumerWidget {
                               SizedBox(
                                 width: 150,
                                 child: CTextField(
-                                  controller: emailec,
                                   onChanged: (v) {
                                     // submitSearch(ref);
+                                    firsts = v ?? "";
                                   },
                                   validator: (value) {
                                     if (value?.isEmpty ?? false) {
@@ -116,9 +106,9 @@ class RegisterView extends ConsumerWidget {
                                 child: SizedBox(
                                   width: 149,
                                   child: CTextField(
-                                    controller: emailec,
                                     onChanged: (v) {
                                       // submitSearch(ref);
+                                      lasts = v ?? "";
                                     },
                                     validator: (value) {
                                       if (value?.isEmpty ?? false) {
@@ -137,9 +127,9 @@ class RegisterView extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: CTextField(
-                          controller: emailec,
                           onChanged: (v) {
                             // submitSearch(ref);
+                            emails = v ?? "";
                           },
                           validator: (value) {
                             bool emailerror = RegExp(
@@ -164,8 +154,9 @@ class RegisterView extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: CTextField(
-                          onChanged: ((p0) {}),
-                          controller: pass,
+                          onChanged: ((p0) {
+                            passwords = p0 ?? "";
+                          }),
                           validator: (value) {
                             bool passValid = RegExp(
                                     r"^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$")
@@ -189,12 +180,13 @@ class RegisterView extends ConsumerWidget {
                         padding: const EdgeInsets.only(top: 0),
                         child: CTextField(
                           onChanged: ((p0) {}),
-                          controller: pass,
                           validator: (value) {
-                            log(pass.text + " " + value!);
-                            if (value != pass.text) {
+                            log(value ?? "" + passwords);
+                            if (value != passwords) {
+                              passsame = false;
                               return 'Passwords not Matching';
                             }
+                            passsame = true;
                           },
                           hinttext: 'Confirm Password',
                           icon: Icon(
@@ -204,66 +196,63 @@ class RegisterView extends ConsumerWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                        child: SizedBox(
-                            // width: 312,
-                            // height: 17,
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: GoogleFonts.montserrat(
-                                      color: Colors.white, fontSize: 14),
-                                ))
-                          ],
-                        )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              // log(passok.toString());
-                              // if (!emailok) {
-                              //   return;
-                              // }
-                              // if (!passok) {
-                              //   return;
-                              // }
-                              log(emailec.text.trim().toLowerCase() + " ayu");
-                              // ref.watch(email.notifier).state =
-                              //     emailec.text.trim().toLowerCase();
-                              // ref.watch(password.notifier).state = pass.text;
-                              // ref.refresh(login);
-                            },
-                            child: SizedBox(
-                              height: 48,
-                              width: 280,
-                              child: Center(
-                                  child: Text(
-                                'Login',
-                                style: GoogleFonts.montserrat(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600),
-                              )),
-                            )),
-                      ),
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Column(
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    // log(passok.toString());
+                                    if (!emailok) {
+                                      return;
+                                    }
+                                    if (!passok) {
+                                      return;
+                                    }
+                                    if (!passsame) {
+                                      return;
+                                    }
+
+                                    ref.watch(email.notifier).state =
+                                        emails.trim().toLowerCase();
+                                    ref.watch(password.notifier).state =
+                                        passwords;
+                                    ref.watch(first.notifier).state = firsts;
+                                    ref.watch(last.notifier).state = lasts;
+                                    ref.watch(loader.notifier).state =
+                                        !ref.watch(loader.notifier).state;
+                                    if (ref.refresh(login).value == 'Success') {
+                                      context.go('/home');
+                                    }
+                                  },
+                                  child: SizedBox(
+                                    height: 48,
+                                    width: 280,
+                                    child: Center(
+                                        child: Text(
+                                      'Sign up',
+                                      style: GoogleFonts.montserrat(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600),
+                                    )),
+                                  )),
+                            ],
+                          )),
                       Container(
                         child: Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Don't have an account?",
+                                "Already have an account?",
                                 style: GoogleFonts.montserrat(
                                     fontSize: 14, fontWeight: FontWeight.w400),
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.go('/Auth/login');
+                                },
                                 child: Text(
-                                  'Sign up',
+                                  'Log in',
                                   style: GoogleFonts.montserrat(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
@@ -341,6 +330,14 @@ class RegisterView extends ConsumerWidget {
                   ),
                 ]),
           ),
+          // SizedBox(
+          //   child: (!ref.watch(loader))
+          //       ? null
+          //       : Container(
+          //           color: Color.fromARGB(199, 0, 0, 0),
+          //           child: Center(child: CircularProgressIndicator()),
+          //         ),
+          // )
         ],
       ),
     ));

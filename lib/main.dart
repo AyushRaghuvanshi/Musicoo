@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:musicoo/AuthViews/AuthView.dart';
 import 'package:musicoo/AuthViews/Login.dart';
 import 'package:musicoo/AuthViews/Register.dart';
+import 'package:musicoo/AuthViews/forgotpassword.dart';
 import 'package:musicoo/InitialPages/Splash.dart';
+import 'package:musicoo/MainViews/dashboard.dart';
 import 'package:musicoo/desgins.dart';
 import 'package:musicoo/providers.dart';
 
@@ -21,9 +23,14 @@ final _router = GoRouter(
           path: 'Auth',
           routes: [
             GoRoute(
-              path: 'login',
-              builder: (context, state) => LoginView(),
-            ),
+                path: 'login',
+                builder: (context, state) => LoginView(),
+                routes: [
+                  GoRoute(
+                    path: 'forgot',
+                    builder: (context, state) => ForgotPassword(),
+                  ),
+                ]),
             GoRoute(
               path: 'register',
               builder: (context, state) => RegisterView(),
@@ -34,6 +41,7 @@ final _router = GoRouter(
       ],
       builder: (context, state) => MyHomePage(),
     ),
+    GoRoute(path: '/home', builder: ((context, state) => Dashboard()))
   ],
 );
 
@@ -59,7 +67,7 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final token = ref.watch(token_provider);
     return token.when(data: (data) {
-      return const SplashScreen();
+      return const Dashboard();
     }, error: ((error, stackTrace) {
       // context.go('/Auth');
       return const AuthView();

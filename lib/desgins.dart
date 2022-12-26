@@ -6,12 +6,14 @@ class CTextField extends ConsumerWidget {
   CTextField(
       {super.key,
       this.hinttext,
+      this.width = 312,
       this.hidden,
       this.icon,
       required this.onChanged,
       this.controller,
       required this.validator});
   final String? hinttext;
+  final int width;
   final String? Function(String?) validator;
   final Function(String?) onChanged;
 
@@ -27,9 +29,7 @@ class CTextField extends ConsumerWidget {
       width: 312,
       child: Center(
         child: TextFormField(
-        onChanged: (value) {
-          
-        },
+          onChanged: onChanged,
           maxLength: 50,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           // validator: validator,
@@ -38,20 +38,21 @@ class CTextField extends ConsumerWidget {
           validator: validator,
           decoration: InputDecoration(
             prefixIcon: icon,
-            suffixIcon: (hinttext == 'Password')
-                ? IconButton(
-                    onPressed: () {
-                      ref.read(eye.notifier).state =
-                          !(ref.read(eye.notifier).state ?? true);
-                    },
-                    icon: Icon(
-                      (!(ref.watch(eye) ?? false))
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.white,
-                    ),
-                  )
-                : null,
+            suffixIcon:
+                (hinttext == 'Password' || hinttext == "Confirm Password")
+                    ? IconButton(
+                        onPressed: () {
+                          ref.read(eye.notifier).state =
+                              !(ref.read(eye.notifier).state ?? true);
+                        },
+                        icon: Icon(
+                          (!(ref.watch(eye) ?? false))
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.white,
+                        ),
+                      )
+                    : null,
             contentPadding: const EdgeInsets.all(10),
             counterText: '',
             hintText: hinttext,
