@@ -23,6 +23,18 @@ class RegisterView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    ref.listen(register, ((previous, next) {
+      if(previous?.value != '' && next.value == ''){
+        ref.watch(loader.notifier).state = false;
+      }
+      if (next.value == 'Success') {
+        context.go('/Auth/register/verify');
+        ref.watch(loader.notifier).state = false;
+      } else if (next.value != '') {
+        ref.watch(error.notifier).state = next.value ?? "";
+        ref.watch(loader.notifier).state = false;
+      }
+    }));
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -220,9 +232,6 @@ class RegisterView extends ConsumerWidget {
                                     ref.watch(last.notifier).state = lasts;
                                     ref.watch(loader.notifier).state =
                                         !ref.watch(loader.notifier).state;
-                                    if (ref.refresh(login).value == 'Success') {
-                                      context.go('/home');
-                                    }
                                   },
                                   child: SizedBox(
                                     height: 48,
@@ -235,6 +244,19 @@ class RegisterView extends ConsumerWidget {
                                           fontWeight: FontWeight.w600),
                                     )),
                                   )),
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                width: 312,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      ref.watch(error),
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           )),
                       Container(
@@ -330,14 +352,14 @@ class RegisterView extends ConsumerWidget {
                   ),
                 ]),
           ),
-          // SizedBox(
-          //   child: (!ref.watch(loader))
-          //       ? null
-          //       : Container(
-          //           color: Color.fromARGB(199, 0, 0, 0),
-          //           child: Center(child: CircularProgressIndicator()),
-          //         ),
-          // )
+          SizedBox(
+            child: (!ref.watch(loader))
+                ? null
+                : Container(
+                    color: Color.fromARGB(199, 0, 0, 0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+          )
         ],
       ),
     ));

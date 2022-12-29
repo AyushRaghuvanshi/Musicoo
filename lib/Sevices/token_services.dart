@@ -8,15 +8,15 @@ class API {
   Dio dio = Dio();
 
   String refreshTokenEndpoint =
-      'https://musicooapis-production.up.railway.app/api/auth/refresh-token';
+      'http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/refresh-token';
   String loginEndPoint =
-      'https://musicooapis-production.up.railway.app/api/auth/login';
+      'http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/login';
   String registerEndPoint =
-      'https://musicooapis-production.up.railway.app/api/auth/signup';
+      'http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/signup';
   String forgotEmailEndpoint =
-      "https://musicooapis-production.up.railway.app/api/auth/forgot-password";
+      "http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/forgot-password";
   String forgotOtpEndpoint =
-      "https://musicooapis-production.up.railway.app/api/auth/confirm-otp";
+      "http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/confirm-otp";
 
   String forgotpassEndpoint =
       "https://musicooapis-production.up.railway.app/api/auth/change-password";
@@ -46,7 +46,7 @@ class API {
   //Login------------------------------------------------------------------------------------------------------------------------------
   Future<String> login(String email, String password) async {
     final pref = await SharedPreferences.getInstance();
-  if (email.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       return '';
     }
     log('hit');
@@ -74,7 +74,6 @@ class API {
       return '';
     }
     final pref = await SharedPreferences.getInstance();
-
     log('hit');
     Response res = await dio.post(registerEndPoint,
         data: {
@@ -87,7 +86,7 @@ class API {
           validateStatus: (status) => true,
         ));
     log(res.statusCode.toString());
-
+    log('here');
     log(res.data.toString());
     if (res.statusCode == 200) {
       return "Success";
@@ -101,7 +100,6 @@ class API {
     if (email == "") {
       throw Exception("");
     }
-
     Response res = await dio.post(forgotEmailEndpoint,
         data: {
           "email": email,

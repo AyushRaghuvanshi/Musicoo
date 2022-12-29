@@ -21,7 +21,9 @@ final login = FutureProvider.autoDispose<String>(((ref) async {
 }));
 
 final email = StateProvider.autoDispose(((ref) => ""));
-
+final error = StateProvider.autoDispose(
+  (ref) => "",
+);
 final password = StateProvider.autoDispose(((ref) => ""));
 final first = StateProvider.autoDispose(((ref) => ""));
 final otppr = StateProvider.autoDispose((ref) => "");
