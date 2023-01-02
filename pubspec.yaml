@@ -27,6 +27,7 @@ dependencies:
   pinput: ^2.2.20
   cached_network_image: ^3.2.3
   flutter_branch_sdk: ^6.4.0
+  google_sign_in: ^5.4.2
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:musicoo/OAuth/google.dart';
 import 'package:musicoo/desgins.dart';
 
 class AuthView extends StatelessWidget {
@@ -62,7 +63,12 @@ class AuthView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
                       child: TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            String s = await signInWithGoogle();
+                            if (s == "Success") {
+                              context.go('/home');
+                            }
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.white),

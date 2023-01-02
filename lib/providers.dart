@@ -8,7 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'package:musicoo/main.dart';
 import 'package:pinput/pinput.dart';
 import 'desgins.dart';
-
+final emailstate = StateProvider((ref) => "",);
+final passwordstate = StateProvider((ref) => "",);
 final loader = StateProvider.autoDispose<bool>(((ref) => false));
 final eventsuccess = StateProvider.autoDispose<bool>((ref) => false);
 final token_provider = FutureProvider<String>(((ref) async {
@@ -19,7 +20,9 @@ final login = FutureProvider.autoDispose<String>(((ref) async {
   final String pass = ref.watch(password);
   return ref.watch(api).login(mail, pass);
 }));
-
+final verified = StateProvider(
+  (ref) => false,
+);
 final email = StateProvider.autoDispose(((ref) => ""));
 final error = StateProvider.autoDispose(
   (ref) => "",
@@ -34,7 +37,7 @@ final register = FutureProvider.autoDispose<String>(((ref) async {
   final String pass = ref.watch(password);
   final String firstn = ref.watch(first);
   final String lastn = ref.watch(last);
-
+ 
   final String result =
       await ref.watch(api).register(firstn, lastn, mail, pass);
 

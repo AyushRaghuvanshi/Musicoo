@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:musicoo/MainViews/dashboard.dart';
+import 'package:musicoo/OAuth/google.dart';
 import 'package:musicoo/desgins.dart';
 import 'package:musicoo/providers.dart';
 
@@ -24,7 +25,7 @@ class RegisterView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     ref.listen(register, ((previous, next) {
-      if(previous?.value != '' && next.value == ''){
+      if (previous?.value != '' && next.value == '') {
         ref.watch(loader.notifier).state = false;
       }
       if (next.value == 'Success') {
@@ -232,6 +233,11 @@ class RegisterView extends ConsumerWidget {
                                     ref.watch(last.notifier).state = lasts;
                                     ref.watch(loader.notifier).state =
                                         !ref.watch(loader.notifier).state;
+                                    ref.watch(emailstate.notifier).state =
+                                        emails.trim().toLowerCase();
+                                    ref.watch(passwordstate.notifier).state =
+                                        passwords;
+                                    ref.refresh(register);
                                   },
                                   child: SizedBox(
                                     height: 48,
@@ -313,7 +319,12 @@ class RegisterView extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 16.0, bottom: 42),
                         child: TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              String s = await signInWithGoogle();
+                              if(s=='Success'){
+                                context.go('/home');
+                              }
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.white),

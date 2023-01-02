@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:musicoo/OAuth/google.dart';
 import 'package:musicoo/desgins.dart';
 import 'package:musicoo/providers.dart';
 
@@ -32,6 +33,8 @@ class LoginView extends ConsumerWidget {
       log(next.value.toString());
       if (next.value == "Success") {
         context.go('/home');
+      } else {
+        ref.watch(error.notifier).state = next.value ?? "";
       }
     });
     // log('here');
@@ -167,31 +170,49 @@ class LoginView extends ConsumerWidget {
                       ),
                       Padding(
                           padding: const EdgeInsets.only(top: 24.0),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                log(passok.toString());
-                                if (!emailok) {
-                                  return;
-                                }
-                                if (!passok) {
-                                  return;
-                                }
-                                ref.watch(email.notifier).state =
-                                    emails.trim().toLowerCase();
-                                ref.watch(password.notifier).state = passwords;
-                                final loginstate = ref.refresh(login);
-                              },
-                              child: SizedBox(
-                                height: 48,
-                                width: 280,
-                                child: Center(
-                                    child: Text(
-                                  'Login',
-                                  style: GoogleFonts.montserrat(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600),
-                                )),
-                              ))),
+                          child: Column(
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    log(passok.toString());
+                                    if (!emailok) {
+                                      return;
+                                    }
+                                    if (!passok) {
+                                      return;
+                                    }
+                                    ref.watch(email.notifier).state =
+                                        emails.trim().toLowerCase();
+                                    ref.watch(password.notifier).state =
+                                        passwords;
+                                    final loginstate = ref.refresh(login);
+                                  },
+                                  child: SizedBox(
+                                    height: 48,
+                                    width: 280,
+                                    child: Center(
+                                        child: Text(
+                                      'Login',
+                                      style: GoogleFonts.montserrat(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600),
+                                    )),
+                                  )),
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                width: 312,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      ref.watch(error),
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          )),
                       Container(
                         child: Center(
                           child: Row(
@@ -246,7 +267,12 @@ class LoginView extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 16.0),
                         child: TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              String s = await signInWithGoogle();
+                              if (s == 'Success') {
+                                context.go('/home');
+                              }
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.white),
