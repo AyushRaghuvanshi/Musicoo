@@ -9,6 +9,8 @@ import 'package:musicoo/AuthViews/AuthView.dart';
 import 'package:musicoo/AuthViews/Login.dart';
 import 'package:musicoo/AuthViews/Register.dart';
 import 'package:musicoo/AuthViews/Verification.dart';
+import 'package:musicoo/AuthViews/addArtist.dart';
+import 'package:musicoo/AuthViews/addArtist2/addArtist2.dart';
 import 'package:musicoo/AuthViews/forgotpassword.dart';
 import 'package:musicoo/InitialPages/Splash.dart';
 import 'package:musicoo/MainViews/dashboard.dart';
@@ -54,7 +56,8 @@ final _router = GoRouter(
       ],
       builder: (context, state) => MyHomePage(),
     ),
-    GoRoute(path: '/home', builder: ((context, state) => Dashboard()))
+    GoRoute(path: '/home', builder: ((context, state) => Addartist())),
+    GoRoute(path: '/addartists2', builder: ((context, state) => Addartist2()))
   ],
 );
 
@@ -206,7 +209,6 @@ class MyHomePage extends ConsumerWidget {
     ref.listen(verified, (previous, next) {
       if (next == true) {
         log('here');
-
         ref.watch(email.notifier).state = ref.watch(emailstate);
         ref.watch(password.notifier).state = ref.watch(passwordstate);
         ref.watch(loader.notifier).state = true;
@@ -215,7 +217,7 @@ class MyHomePage extends ConsumerWidget {
     });
     final token = ref.watch(token_provider);
     return token.when(data: (data) {
-      return const Dashboard();
+      return  Addartist();
     }, error: ((error, stackTrace) {
       // context.go('/Auth');
       return const AuthView();

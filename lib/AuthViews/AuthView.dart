@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:musicoo/OAuth/google.dart';
+import 'package:musicoo/constants/constants.dart';
 import 'package:musicoo/desgins.dart';
 
 class AuthView extends StatelessWidget {
@@ -28,104 +29,107 @@ class AuthView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.asset('assets/LOGO.png'),
-                Column(
-                  children: [
-                    CText(
-                      t: 'Millions of Songs.',
-                      size: 28.0,
-                    ),
-                    CText(
-                      t: 'Free on Musicoo.',
-                      size: 28.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 51.0),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            context.go('/Auth/register');
-                          },
-                          child: SizedBox(
-                            height: 48,
-                            width: 312,
-                            child: Center(
-                              child: Text(
-                                'Sign up free',
+                SvgPicture.asset('assets/M.svg'),
+                Padding(
+                  padding: getPadding(top: 144),
+                  child: Column(
+                    children: [
+                      CText(
+                        t: 'Millions of Songs.',
+                        size: getSize(28),
+                      ),
+                      CText(
+                        t: 'Free on Musicoo.',
+                        size: getSize(28),
+                      ),
+                      Padding(
+                        padding: getPadding(top: 51),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              context.go('/Auth/register');
+                            },
+                            child: SizedBox(
+                              height: getSize(48),
+                              width: getSize(312),
+                              child: Center(
+                                child: Text(
+                                  'Sign up free',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600)),
+                                ),
+                              ),
+                            )),
+                      ),
+                      Padding(
+                        padding: getPadding(top: 16),
+                        child: TextButton(
+                            onPressed: () async {
+                              String s = await signInWithGoogle();
+                              if (s == "Success") {
+                                context.go('/home');
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              height: getSize(48),
+                              width: getSize(345),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: getPadding(left: 16),
+                                      child: Image.network(
+                                          'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png'),
+                                    ),
+                                    Padding(
+                                      padding: getPadding(left: 30),
+                                      child: Text(
+                                        'Continue with Google',
+                                        style: GoogleFonts.montserrat(
+                                            textStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                      ),
+                      Padding(
+                        padding: getPadding(top: 16),
+                        child: TextButton(
+                            onPressed: () {
+                              context.go('/Auth/login');
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              height: getSize(48),
+                              width: getSize(345),
+                              child: Center(
+                                  child: Text(
+                                'Login',
                                 style: GoogleFonts.montserrat(
                                     textStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w600)),
-                              ),
-                            ),
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: TextButton(
-                          onPressed: () async {
-                            String s = await signInWithGoogle();
-                            if (s == "Success") {
-                              context.go('/home');
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.white),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            height: 48,
-                            width: 345,
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 16.0),
-                                    child: Image.network(
-                                        'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 30.0),
-                                    child: Text(
-                                      'Continue with Google',
-                                      style: GoogleFonts.montserrat(
-                                          textStyle: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: TextButton(
-                          onPressed: () {
-                            context.go('/Auth/login');
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.white),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            height: 48,
-                            width: 345,
-                            child: Center(
-                                child: Text(
-                              'Login',
-                              style: GoogleFonts.montserrat(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600)),
+                              )),
                             )),
-                          )),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 )
               ],
             ),

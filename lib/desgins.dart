@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+late final eye = StateProvider<bool?>((ref) => true);
+
 class CTextField extends ConsumerWidget {
   CTextField(
       {super.key,
@@ -20,7 +22,6 @@ class CTextField extends ConsumerWidget {
   final controller;
   final bool? hidden;
   final icon;
-  late final eye = StateProvider<bool?>((ref) => hidden);
 
   @override
   Widget build(BuildContext context, ref) {

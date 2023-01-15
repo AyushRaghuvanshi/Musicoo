@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:musicoo/MainViews/dashboard.dart';
@@ -65,8 +66,8 @@ class RegisterView extends ConsumerWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 88.0),
-                    child: Image.asset('assets/LOGO.png'),
+                    padding: const EdgeInsets.only(top: 69.0),
+                    child: SvgPicture.asset('assets/M.svg'),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0),
@@ -321,7 +322,7 @@ class RegisterView extends ConsumerWidget {
                         child: TextButton(
                             onPressed: () async {
                               String s = await signInWithGoogle();
-                              if(s=='Success'){
+                              if (s == 'Success') {
                                 context.go('/home');
                               }
                             },

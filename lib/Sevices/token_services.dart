@@ -38,8 +38,8 @@ class API {
     })));
     log(res.statusCode.toString());
     log(res.data.toString());
-    await pref.setString('access', res.data['accessToken']);
-    await pref.setString('refresh', res.data['refreshToken']);
+    pref.setString('access', res.data['accessToken']);
+    pref.setString('refresh', res.data['refreshToken']);
     return res.data['accessToken'];
   }
 

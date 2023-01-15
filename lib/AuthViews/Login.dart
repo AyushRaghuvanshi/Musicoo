@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:musicoo/OAuth/google.dart';
@@ -68,9 +69,8 @@ class LoginView extends ConsumerWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: Image.asset('assets/LOGO.png'),
-                  ),
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: SvgPicture.asset('assets/M.svg')),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0),
                     child: Text(
