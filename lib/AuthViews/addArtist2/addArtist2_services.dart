@@ -7,9 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AddArtist2api {
   Dio dio = Dio();
-  getArtists() async {
+  dynamic getArtists() async {
     String endpoint =
-        "http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/artists";
+        "https://musicoo-pvt-production.up.railway.app/api/artists";
     final pref = await SharedPreferences.getInstance();
     String? token = pref.getString('access');
     dio.options.headers["Authorization"] = "Bearer ${token}";
@@ -17,6 +17,12 @@ class AddArtist2api {
         options: Options(
           validateStatus: (status) => true,
         ));
+    if (res.statusCode == 401) {
+      log(res.statusCode.toString() + " here");
+      API api = API();
+      await api.get_token();
+      return "recall";
+    }
     log(res.data.toString());
     if (res.statusCode == 200) {
       return res.data;
@@ -27,7 +33,7 @@ class AddArtist2api {
     API api = API();
     await api.get_token();
     String endpoint =
-        "http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/profile/choices";
+        "https://musicoo-pvt-production.up.railway.app/api/profile/choices";
 
     final pref = await SharedPreferences.getInstance();
 
@@ -50,12 +56,12 @@ class AddArtist2api {
         options: Options(
           validateStatus: (status) => true,
         ));
-    // if (res.statusCode == 401) {
-    //   log(res.statusCode.toString() + " here");
-    //   API api = API();
-    //   await api.get_token();
-    //   return "recall";
-    // }
+    if (res.statusCode == 401) {
+      log(res.statusCode.toString() + " here");
+      API api = API();
+      await api.get_token();
+      return "recall";
+    }
     log(res.statusCode.toString());
   }
 }

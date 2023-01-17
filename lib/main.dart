@@ -14,6 +14,7 @@ import 'package:musicoo/AuthViews/addArtist2/addArtist2.dart';
 import 'package:musicoo/AuthViews/forgotpassword.dart';
 import 'package:musicoo/InitialPages/Splash.dart';
 import 'package:musicoo/MainViews/dashboard.dart';
+import 'package:musicoo/MainViews/Home/home.dart';
 import 'package:musicoo/desgins.dart';
 import 'package:musicoo/providers.dart';
 
@@ -46,9 +47,18 @@ final _router = GoRouter(
                 builder: (context, state) => RegisterView(),
                 routes: [
                   GoRoute(
-                    path: 'verify',
-                    builder: (context, state) => VerificationPage(),
-                  ),
+                      path: 'verify',
+                      builder: (context, state) => VerificationPage(),
+                      routes: [
+                        GoRoute(
+                            path: 'step1',
+                            builder: ((context, state) => Addartist()),
+                            routes: [
+                              GoRoute(
+                                  path: 'step2',
+                                  builder: ((context, state) => Addartist2())),
+                            ]),
+                      ]),
                 ]),
           ],
           builder: (context, state) => AuthView(),
@@ -56,8 +66,7 @@ final _router = GoRouter(
       ],
       builder: (context, state) => MyHomePage(),
     ),
-    GoRoute(path: '/home', builder: ((context, state) => Addartist())),
-    GoRoute(path: '/addartists2', builder: ((context, state) => Addartist2()))
+    GoRoute(path: '/home', builder: ((context, state) => Dashboard())),
   ],
 );
 
@@ -203,7 +212,7 @@ class MyHomePage extends ConsumerWidget {
     listenDynamicLinks(ref);
     ref.listen(login, (previous, next) {
       if (next.value == "Success") {
-        context.go('/home');
+        context.go('/Auth/register/verify/step1');
       }
     });
     ref.listen(verified, (previous, next) {
@@ -213,11 +222,12 @@ class MyHomePage extends ConsumerWidget {
         ref.watch(password.notifier).state = ref.watch(passwordstate);
         ref.watch(loader.notifier).state = true;
         ref.refresh(login);
+        context.go('/Auth/register/verify/step1');
       }
     });
     final token = ref.watch(token_provider);
     return token.when(data: (data) {
-      return  Addartist();
+      return const Dashboard();
     }, error: ((error, stackTrace) {
       // context.go('/Auth');
       return const AuthView();

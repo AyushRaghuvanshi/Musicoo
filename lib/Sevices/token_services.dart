@@ -6,26 +6,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class API {
   Dio dio = Dio();
+  String hostingplatform = "https://musicoo-pvt-production.up.railway.app/";
 
   String refreshTokenEndpoint =
-      'http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/refresh-token';
+      'https://musicoo-pvt-production.up.railway.app/api/auth/refresh-token';
   String loginEndPoint =
-      'http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/login';
+      'https://musicoo-pvt-production.up.railway.app/api/auth/login';
   String registerEndPoint =
-      'http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/signup';
+      'https://musicoo-pvt-production.up.railway.app/api/auth/signup';
   String forgotEmailEndpoint =
-      "http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/forgot-password";
+      "https://musicoo-pvt-production.up.railway.app/api/auth/forgot-password";
   String forgotOtpEndpoint =
-      "http://musicoo-env.eba-2fizuegb.us-east-1.elasticbeanstalk.com/api/auth/confirm-otp";
+      "https://musicoo-pvt-production.up.railway.app/api/auth/confirm-otp";
 
   String forgotpassEndpoint =
-      "https://musicooapis-production.up.railway.app/api/auth/change-password";
+      "https://musicoo-pvt-production.up.railway.app/api/auth/change-password";
+
   Future<String> get_token() async {
     final pref = await SharedPreferences.getInstance();
     String? rtoken = pref.getString("refresh");
     if (rtoken == null) {
       throw Exception('Refresh Token not Present');
     }
+    log("step1 $rtoken");
     Response res = await dio
         .post(refreshTokenEndpoint, data: {"refreshToken": rtoken},
             options: Options(validateStatus: ((status) {
@@ -143,8 +146,11 @@ class API {
         options: Options(
           validateStatus: (status) => true,
         ));
+    log(res.statusCode.toString());
+    log(res.data.toString());
     if (res.statusCode == 200) {
       log('success');
+      return 'success';
     } else {
       throw Exception(res.data);
     }

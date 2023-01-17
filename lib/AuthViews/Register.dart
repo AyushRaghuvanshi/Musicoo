@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:musicoo/MainViews/dashboard.dart';
+import 'package:musicoo/MainViews/Home/home.dart';
 import 'package:musicoo/OAuth/google.dart';
 import 'package:musicoo/desgins.dart';
 import 'package:musicoo/providers.dart';
@@ -238,6 +238,7 @@ class RegisterView extends ConsumerWidget {
                                         emails.trim().toLowerCase();
                                     ref.watch(passwordstate.notifier).state =
                                         passwords;
+                                    log('here');
                                     ref.refresh(register);
                                   },
                                   child: SizedBox(

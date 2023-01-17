@@ -117,16 +117,26 @@ class Addartist2 extends ConsumerWidget {
                               res = await api.submitchoices(
                                   artist_list_1, genre_list_1);
                             }
+
+                            context.go('/home');
                           }),
                           child: Container(
                               height: getVerticalSize(54),
                               width: getHorizontalSize(312),
                               child: Center(
                                   child: Text(
-                                'Next',
+                                'Continue',
                                 style: TextStyle(color: Colors.black),
                               )))),
-                    )
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          context.go('/home');
+                        },
+                        child: Text(
+                          'Skip',
+                          style: TextStyle(color: Colors.white),
+                        ))
                   ]),
             ),
           )

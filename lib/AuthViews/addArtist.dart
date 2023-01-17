@@ -101,8 +101,8 @@ class Addartist extends ConsumerWidget {
                               if (genre_list.length < 5) {
                                 return;
                               }
-                              ref.watch(genre.notifier).state=genre_list;
-                              context.go('/addartists2');
+                              ref.watch(genre.notifier).state = genre_list;
+                              context.go('/Auth/register/verify/step1/step2');
                             }),
                             child: Container(
                                 height: getVerticalSize(54),
@@ -112,7 +112,15 @@ class Addartist extends ConsumerWidget {
                                   'Next',
                                   style: TextStyle(color: Colors.black),
                                 )))),
-                      )
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            context.go('/home');
+                          },
+                          child: Text(
+                            'Skip',
+                            style: TextStyle(color: Colors.white),
+                          ))
                     ]),
               ),
             )

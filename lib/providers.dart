@@ -8,8 +8,13 @@ import 'package:go_router/go_router.dart';
 import 'package:musicoo/main.dart';
 import 'package:pinput/pinput.dart';
 import 'desgins.dart';
-final emailstate = StateProvider((ref) => "",);
-final passwordstate = StateProvider((ref) => "",);
+
+final emailstate = StateProvider(
+  (ref) => "",
+);
+final passwordstate = StateProvider(
+  (ref) => "",
+);
 final loader = StateProvider.autoDispose<bool>(((ref) => false));
 final eventsuccess = StateProvider.autoDispose<bool>((ref) => false);
 final token_provider = FutureProvider<String>(((ref) async {
@@ -37,7 +42,7 @@ final register = FutureProvider.autoDispose<String>(((ref) async {
   final String pass = ref.watch(password);
   final String firstn = ref.watch(first);
   final String lastn = ref.watch(last);
- 
+
   final String result =
       await ref.watch(api).register(firstn, lastn, mail, pass);
 
@@ -60,11 +65,12 @@ final forgototp = FutureProvider.autoDispose<dynamic>(
 );
 
 final forgotpass = FutureProvider.autoDispose<dynamic>(
-  (ref) {
+  (ref) async {
     final String mail = ref.watch(email);
     final String otpp = ref.watch(otppr);
     final String pass = ref.watch(password);
-    return ref.watch(api).forgotpasschange(mail, otpp, pass);
+    final String res = await ref.watch(api).forgotpasschange(mail, otpp, pass);
+    return res;
   },
 );
 
@@ -256,7 +262,7 @@ final forgot = StateProvider.autoDispose<Widget>(((ref) {
                     );
                   },
                 ),
-              ),
+              ), 
             )
           ],
         ),
@@ -570,6 +576,7 @@ final forgot = StateProvider.autoDispose<Widget>(((ref) {
                       }
                       ref.watch(password.notifier).state = pass;
                       final res = await ref.refresh(forgotpass);
+
                       if (res.hasError) {
                         log(res.error.toString());
                         return;

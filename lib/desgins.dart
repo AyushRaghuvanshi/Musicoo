@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-late final eye = StateProvider<bool?>((ref) => true);
-
 class CTextField extends ConsumerWidget {
   CTextField(
       {super.key,
@@ -18,7 +16,7 @@ class CTextField extends ConsumerWidget {
   final int width;
   final String? Function(String?) validator;
   final Function(String?) onChanged;
-
+  late final eye = StateProvider<bool?>((ref) => true);
   final controller;
   final bool? hidden;
   final icon;
@@ -34,7 +32,10 @@ class CTextField extends ConsumerWidget {
           maxLength: 50,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           // validator: validator,
-          obscureText: ref.watch(eye) ?? false,
+          obscureText:
+              (hinttext == 'Password' || hinttext == "Confirm Password")
+                  ? ref.watch(eye) ?? false
+                  : false,
           maxLines: 1,
           validator: validator,
           decoration: InputDecoration(

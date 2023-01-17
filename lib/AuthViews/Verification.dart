@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:musicoo/constants/CustomWidget.dart';
 import 'package:musicoo/constants/constants.dart';
 
@@ -8,7 +9,12 @@ import '../providers.dart';
 class VerificationPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
-    String email = ref.watch(emailstate);
+    String emails = ref.watch(emailstate);
+    ref.listen(login, (previous, next) {
+      if (next.value == "Success") {
+        context.go('/Auth/register/verify/step1');
+      }
+    });
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -25,18 +31,6 @@ class VerificationPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CustomImageView(
-                    svgPath: ImageConstant.imgArrowleft,
-                    height: getSize(
-                      24.00,
-                    ),
-                    width: getSize(
-                      24.00,
-                    ),
-                    margin: getMargin(
-                      left: 1,
-                    ),
-                  ),
                   Padding(
                     padding: getPadding(
                       top: 18,
@@ -63,7 +57,7 @@ class VerificationPage extends ConsumerWidget {
                       top: 7,
                     ),
                     child: Text(
-                      "Hi! We’ve sent an email to $email to verify your email address and activate your account. The link in the email will expire in 24 hours.",
+                      "Hi! We’ve sent an email to $emails to verify your email address and activate your account. The link in the email will expire in 24 hours.",
                       maxLines: null,
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -84,34 +78,31 @@ class VerificationPage extends ConsumerWidget {
                     ),
                     child: Row(
                       children: [
-                        Text(
-                          "Click Here",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: getFontSize(
-                              12,
-                            ),
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
                         Padding(
                           padding: getPadding(
                             left: 4,
                           ),
-                          child: Text(
-                            "Click Here",
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: getFontSize(
-                                12,
+                          child: TextButton(
+                            onPressed: () {
+                              ref.watch(email.notifier).state =
+                                  ref.watch(emailstate);
+                              ref.watch(password.notifier).state =
+                                  ref.watch(passwordstate);
+                              ref.watch(loader.notifier).state = true;
+                              ref.refresh(login);
+                            },
+                            child: Text(
+                              "Click Here",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: getFontSize(
+                                  12,
+                                ),
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w600,
                               ),
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
